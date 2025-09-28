@@ -27,6 +27,13 @@ export const Colors = {
   },
 };
 
+export const ButtonColors = {
+  signInBackground: "#D1D5DB", // hallikas taust
+  signInText: "#4F63AC",       // sinakas tekst
+  signUpBackground: "#4F63AC", // sinine taust
+  signUpText: "#fff",          // valge tekst
+};
+
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */
