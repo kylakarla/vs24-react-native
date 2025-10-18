@@ -25,13 +25,16 @@ export const Colors = {
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
   },
+  black: {
+    text: '#000000',
+  },
 };
 
 export const ButtonColors = {
   signInBackground: "#D1D5DB", // hallikas taust
   signInText: "#4F63AC",       // sinakas tekst
   signUpBackground: "#4F63AC", // sinine taust
-  signUpText: "#fff",          // valge tekst
+  signUpText: "#fff",       // valge tekst
 };
 
 export const Fonts = Platform.select({
