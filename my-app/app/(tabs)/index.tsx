@@ -1,100 +1,93 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useContext, useState } from "react";
+import {View ,Text ,FlatList , Image , TouchableOpacity, TextInput, StyleSheet,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { FavoritesContext } from "@/app/context/FavoritesContext";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
-
+const DATA = [
+  { id: "1", title: "Black Simple Lamp", price: 12, image: require("@/assets/images/lamp.jpg") },
+  { id: "2", title: "Minimal Stand", price: 25, image: require("@/assets/images/stand.jpg") },
+  { id: "3", title: "Coffee Chair", price: 20, image: require("@/assets/images/chair.jpg") },
+  { id: "4", title: "Simple Desk", price: 50, image: require("@/assets/images/desk.jpg") },
+];
 
 export default function HomeScreen() {
-  return (
-    
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const { favorites, toggleFavorite } = useContext(FavoritesContext);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  // Filter products based on search text (case-insensitive)
+  const filteredData = DATA.filter((item) =>
+    item.title.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const renderItem = ({ item }: any) => {
+    const isFavorite = favorites.includes(item.id);
+
+    return (
+      <View style={styles.card}>
+        <Image source={item.image} style={styles.image} />
+        <TouchableOpacity
+          style={styles.heartIcon}
+          onPress={() => toggleFavorite(item.id)}
+        >
+          <Ionicons
+            name={isFavorite ? "heart" : "heart-outline"}
+            size={22}
+            color={isFavorite ? "#E53935" : "#444"}
+          />
+        </TouchableOpacity>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.price}>${item.price.toFixed(2)}</Text>
+      </View>
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      {/* Top bar with search button */}
+      <View style={styles.topBar}>
+        <TouchableOpacity onPress={() => setShowSearch(!showSearch)}>
+          <Image
+            source={require("@/assets/images/search.png")}
+            style={styles.searchIcon}
+          />
+        </TouchableOpacity>
+        <Text style={styles.header}>Find All You Need</Text>
+        {/* empty space to balance the layout */}
+        <View style={{ width: 30 }} />
+      </View>
+
+      {showSearch && (
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search products..."
+          value={searchText}
+          onChangeText={setSearchText}
+        />
+      )}
+
+      <FlatList
+        data={filteredData}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        columnWrapperStyle={{ justifyContent: "space-between" }}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+  container: { flex: 1, backgroundColor: "#fff", paddingHorizontal: 16, paddingTop: 50 },
+  topBar: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 10 },
+  searchIcon: { width: 30, height: 30 },
+  header: { fontSize: 22, fontWeight: "700", textAlign: "center", flex: 1 },
+  searchInput: { height: 40, borderColor: "#ccc", borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, marginBottom: 10 },
+  card: { backgroundColor: "#ffffff", borderRadius: 12, marginBottom: 20, width: "48%", padding: 10, position: "relative" },
+  image: { width: "100%", height: 220, borderRadius: 10 },
+  heartIcon: { position: "absolute", top: 12, right: 12, backgroundColor: "#fff", borderRadius: 50, padding: 4 },
+  title: { fontSize: 14, fontWeight: "600", marginTop: 10 },
+  price: { fontSize: 13, color: "#4F63AC", marginTop: 4 },
 });

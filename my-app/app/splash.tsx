@@ -15,7 +15,10 @@ export default function SplashScreen() {
         style={styles.image}
         resizeMode="contain"
       />
-      <Text style={styles.text}>Welcome to My App!</Text>
+      <Text style={styles.text}>
+  You’ll find <Text style={{ color: "#FCA34D" }}>all you need</Text> here!
+</Text>
+
 
       <SignUpButton onPress={() => router.push("/signUp")} />
       <SignInButton onPress={() => router.push("/signIn")} />
@@ -26,6 +29,6 @@ export default function SplashScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#fff" },
-  image: { width: 250, height: 250, marginBottom: 30 },
+  image: { width: 300, height: 300, marginBottom: 30 },
   text: { fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 40 },
 });

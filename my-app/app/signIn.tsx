@@ -5,6 +5,7 @@ import InputField from "@/components/forms/InputField_";
 import GoogleButton from "@/components/forms/GoogleButton";
 import { ButtonColors } from "@/constants/theme";
 import { useRouter } from "expo-router";
+import { push } from "expo-router/build/global-state/routing";
 
 export default function SignInScreen() {
   const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ export default function SignInScreen() {
 
   const handleSignIn = () => {
     Alert.alert("Sign In", `Email: ${email}\nPassword: ${password}`);
+    push("/(tabs)");
   };
 
   return (
@@ -30,6 +32,7 @@ export default function SignInScreen() {
       {/* Sign In Button */}
       <Pressable style={styles.button} onPress={handleSignIn}>
         <Text style={styles.buttonText}>Sign In</Text>
+        
       </Pressable>
 
       {/* Google Button */}

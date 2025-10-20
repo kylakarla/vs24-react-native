@@ -5,6 +5,7 @@ import InputField from "@/components/forms/InputField_";
 import GoogleButton from "@/components/forms/GoogleButton";
 import { ButtonColors } from "@/constants/theme";
 import { useRouter } from "expo-router";
+import { push } from "expo-router/build/global-state/routing";
 
 export default function SignUpScreen() {
   const [name, setName] = useState("");
@@ -14,6 +15,7 @@ export default function SignUpScreen() {
 
   const handleSignUp = () => {
     Alert.alert("Sign Up", `Name: ${name}\nEmail: ${email}\nPassword: ${password}`);
+    push("/(tabs)");
   };
 
   return (
