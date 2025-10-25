@@ -1,55 +1,50 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
+import React, { useState, useContext } from "react";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import InputField from "@/components/forms/InputField_";
 import GoogleButton from "@/components/forms/GoogleButton";
 import { ButtonColors } from "@/constants/theme";
-import { useRouter } from "expo-router";
+import {useRouter } from "expo-router";
 import { push } from "expo-router/build/global-state/routing";
+import { UserContext } from "@/app/context/UserContext";
 
 export default function SignUpScreen() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const { setUser } = useContext(UserContext);
 
   const handleSignUp = () => {
-    Alert.alert("Sign Up", `Name: ${name}\nEmail: ${email}\nPassword: ${password}`);
+    if (!name || !email || !password) return;
+    setUser({ name, email });
     push("/(tabs)");
   };
 
   return (
     <View style={styles.container}>
-      {/* Back & Title */}
       <View style={styles.header}>
         <Ionicons name="arrow-back" size={24} color="#000" onPress={() => router.back()} />
         <Text style={styles.title}>Sign Up</Text>
       </View>
 
-      {/* Inputs */}
       <InputField placeholder="Name" value={name} onChangeText={setName} />
       <InputField placeholder="E-mail" value={email} onChangeText={setEmail} />
       <InputField placeholder="Password" secureTextEntry value={password} onChangeText={setPassword} />
 
-      {/* Terms & Privacy */}
-      <Text style={styles.terms}>
-        I agree with <Text style={{ color: "#4F63AC" }}>Terms & Privacy</Text>
-      </Text>
+      <Text style={styles.terms}>I agree with <Text style={{ color: "#4F63AC" }}>Terms & Privacy</Text></Text>
 
-      {/* Sign Up Button */}
       <Pressable style={styles.button} onPress={handleSignUp}>
         <Text style={styles.buttonText}>Sign Up</Text>
       </Pressable>
 
-      {/* Google Button */}
       <View style={styles.divider}>
         <View style={styles.line} />
         <Text style={styles.or}>Or sign up with</Text>
         <View style={styles.line} />
       </View>
-      <GoogleButton onPress={() => Alert.alert("Google Sign Up")} />
+      <GoogleButton onPress={() => {}} />
 
-      {/* Footer Link */}
       <Text style={styles.footer}>
         Already have an account?{" "}
         <Text style={{ color: "#4F63AC" }} onPress={() => router.push("/signIn")}>
@@ -65,13 +60,7 @@ const styles = StyleSheet.create({
   header: { flexDirection: "row", alignItems: "center", marginBottom: 30 },
   title: { fontSize: 26, fontWeight: "700", marginLeft: 10 },
   terms: { fontSize: 14, marginBottom: 20 },
-  button: {
-    backgroundColor: ButtonColors.signUpBackground,
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 10,
-  },
+  button: { backgroundColor: ButtonColors.signUpBackground, paddingVertical: 15, borderRadius: 8, alignItems: "center", marginTop: 10 },
   buttonText: { color: ButtonColors.signUpText, fontSize: 16, fontWeight: "600" },
   divider: { flexDirection: "row", alignItems: "center", marginVertical: 20 },
   line: { flex: 1, height: 1, backgroundColor: "#ccc" },

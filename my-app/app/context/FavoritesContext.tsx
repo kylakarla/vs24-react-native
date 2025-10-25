@@ -25,4 +25,3 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
     </FavoritesContext.Provider>
   );
 };
-

@@ -1,23 +1,17 @@
 import React, { useContext, useState } from "react";
-import {View ,Text ,FlatList , Image , TouchableOpacity, TextInput, StyleSheet,
-} from "react-native";
+import { View, Text, FlatList, Image, TouchableOpacity, TextInput, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { FavoritesContext } from "@/app/context/FavoritesContext";
-
-const DATA = [
-  { id: "1", title: "Black Simple Lamp", price: 12, image: require("@/assets/images/lamp.jpg") },
-  { id: "2", title: "Minimal Stand", price: 25, image: require("@/assets/images/stand.jpg") },
-  { id: "3", title: "Coffee Chair", price: 20, image: require("@/assets/images/chair.jpg") },
-  { id: "4", title: "Simple Desk", price: 50, image: require("@/assets/images/desk.jpg") },
-];
+import { DATA } from "@/app/data";
 
 export default function HomeScreen() {
+  const router = useRouter();
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
   const [showSearch, setShowSearch] = useState(false);
   const [searchText, setSearchText] = useState("");
 
-  // Filter products based on search text (case-insensitive)
-  const filteredData = DATA.filter((item) =>
+  const filteredData = DATA.filter(item =>
     item.title.toLowerCase().includes(searchText.toLowerCase())
   );
 
@@ -25,7 +19,10 @@ export default function HomeScreen() {
     const isFavorite = favorites.includes(item.id);
 
     return (
-      <View style={styles.card}>
+      <TouchableOpacity
+        style={styles.card}
+        onPress={() => router.push(`/detail?productId=${item.id}`)}
+      >
         <Image source={item.image} style={styles.image} />
         <TouchableOpacity
           style={styles.heartIcon}
@@ -39,22 +36,17 @@ export default function HomeScreen() {
         </TouchableOpacity>
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.price}>${item.price.toFixed(2)}</Text>
-      </View>
+      </TouchableOpacity>
     );
   };
 
   return (
     <View style={styles.container}>
-      {/* Top bar with search button */}
       <View style={styles.topBar}>
         <TouchableOpacity onPress={() => setShowSearch(!showSearch)}>
-          <Image
-            source={require("@/assets/images/search.png")}
-            style={styles.searchIcon}
-          />
+          <Text>🔍</Text>
         </TouchableOpacity>
         <Text style={styles.header}>Find All You Need</Text>
-        {/* empty space to balance the layout */}
         <View style={{ width: 30 }} />
       </View>
 
@@ -82,7 +74,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff", paddingHorizontal: 16, paddingTop: 50 },
   topBar: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 10 },
-  searchIcon: { width: 30, height: 30 },
   header: { fontSize: 22, fontWeight: "700", textAlign: "center", flex: 1 },
   searchInput: { height: 40, borderColor: "#ccc", borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, marginBottom: 10 },
   card: { backgroundColor: "#ffffff", borderRadius: 12, marginBottom: 20, width: "48%", padding: 10, position: "relative" },
