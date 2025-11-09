@@ -1,21 +1,40 @@
-import React, { useContext, useState } from "react";
-import { View, Text, FlatList, Image, TouchableOpacity, TextInput, StyleSheet } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { FavoritesContext } from "@/app/context/FavoritesContext";
-import { DATA } from "@/app/data";
+import { fetchProducts, Product } from "@/app/data";
 
 export default function HomeScreen() {
   const router = useRouter();
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showSearch, setShowSearch] = useState(false);
   const [searchText, setSearchText] = useState("");
 
-  const filteredData = DATA.filter(item =>
+  useEffect(() => {
+    fetchProducts().then((data) => {
+      setProducts(data);
+      setLoading(false);
+    });
+  }, []);
+
+  const filteredData = products.filter((item) =>
     item.title.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const renderItem = ({ item }: any) => {
+  const renderItem = ({ item }: { item: Product }) => {
     const isFavorite = favorites.includes(item.id);
 
     return (
@@ -23,7 +42,7 @@ export default function HomeScreen() {
         style={styles.card}
         onPress={() => router.push(`/detail?productId=${item.id}`)}
       >
-        <Image source={item.image} style={styles.image} />
+        <Image source={{ uri: item.image }} style={styles.image} />
         <TouchableOpacity
           style={styles.heartIcon}
           onPress={() => toggleFavorite(item.id)}
@@ -40,11 +59,20 @@ export default function HomeScreen() {
     );
   };
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#4F63AC" />
+        <Text>Loading products...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
         <TouchableOpacity onPress={() => setShowSearch(!showSearch)}>
-          <Text>🔍</Text>
+          <Ionicons name="search" size={24} color="#000" />
         </TouchableOpacity>
         <Text style={styles.header}>Find All You Need</Text>
         <View style={{ width: 30 }} />
@@ -81,4 +109,5 @@ const styles = StyleSheet.create({
   heartIcon: { position: "absolute", top: 12, right: 12, backgroundColor: "#fff", borderRadius: 50, padding: 4 },
   title: { fontSize: 14, fontWeight: "600", marginTop: 10 },
   price: { fontSize: 13, color: "#4F63AC", marginTop: 4 },
+  loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
 });

@@ -13,11 +13,16 @@ export const FavoritesContext = createContext<FavoritesContextType>({
 export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   const [favorites, setFavorites] = useState<string[]>([]);
 
-  const toggleFavorite = (id: string) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((fid) => fid !== id) : [...prev, id]
-    );
-  };
+const toggleFavorite = (id: string) => {
+  setFavorites(prev => {
+    const updated = prev.includes(id)
+      ? prev.filter(fid => fid !== id)
+      : [...prev, id];
+
+    console.log("Updated Favorites:", updated);
+    return updated;
+  });
+};
 
   return (
     <FavoritesContext.Provider value={{ favorites, toggleFavorite }}>
