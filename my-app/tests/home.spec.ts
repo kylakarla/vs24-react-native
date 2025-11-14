@@ -22,6 +22,4 @@ test.describe("Sign Up Screen", () => {
     await page.locator('input[placeholder="Password"]').fill("123456");
   });
 
-
-
 });

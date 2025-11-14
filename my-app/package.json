@@ -8,7 +8,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "test:cucumber": "cucumber-js --require features/step_definitions/**/*.js"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
@@ -39,11 +40,15 @@
     "react-native-worklets": "0.5.1"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^12.2.0",
     "@playwright/test": "^1.56.1",
     "@types/node": "^24.10.1",
     "@types/react": "~19.1.0",
+    "chai": "^6.2.1",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
+    "expect": "^30.2.0",
+    "puppeteer": "^24.30.0",
     "typescript": "~5.9.2"
   },
   "private": true
